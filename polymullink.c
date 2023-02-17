@@ -15,30 +15,17 @@ void insert(struct Node** head, int coefficient, int exponent) {
     (*head) = newNode;
 }
 
-void subtract(struct Node* poly1, struct Node* poly2) {
-    struct Node* result = NULL;
-    while (poly1 && poly2) {
-        if (poly1->exponent > poly2->exponent) {
-            insert(&result, poly1->coefficient, poly1->exponent);
-            poly1 = poly1->next;
-        } else if (poly1->exponent < poly2->exponent) {
-            insert(&result, -poly2->coefficient, poly2->exponent);
-            poly2 = poly2->next;
-        } else {
-            int sub = poly1->coefficient - poly2->coefficient;
-            if (sub != 0)
-                insert(&result, sub, poly1->exponent);
-            poly1 = poly1->next;
-            poly2 = poly2->next;
-        }
-    }
+void multiply(struct Node* poly1, struct Node* poly2) {
+    struct Node *result = NULL, *temp2 = poly2;
     while (poly1) {
-        insert(&result, poly1->coefficient, poly1->exponent);
+        while (temp2) {
+            int coefficient = poly1->coefficient * temp2->coefficient;
+            int exponent = poly1->exponent + temp2->exponent;
+            insert(&result, coefficient, exponent);
+            temp2 = temp2->next;
+        }
+        temp2 = poly2;
         poly1 = poly1->next;
-    }
-    while (poly2) {
-        insert(&result, -poly2->coefficient, poly2->exponent);
-        poly2 = poly2->next;
     }
     printf("Resultant Polynomial: ");
     while (result) {
@@ -74,7 +61,7 @@ int main() {
             printf(" + ");
     }
     printf("\n");
-    subtract(poly1, poly2);
+    multiply(poly1, poly2);
     return 0;
 }
 
